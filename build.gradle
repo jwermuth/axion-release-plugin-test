@@ -44,6 +44,13 @@ plugins {
 }
 
 apply plugin: "pl.allegro.tech.build.axion-release"
+scmVersion {
+    versionCreator 'simple'
+    // Allow tagging on multiple branches, with the same prefix, without tag-clashing, by using highest version independent of branches
+    // https://axion-release-plugin.readthedocs.io/en/latest/configuration/version/
+    useGlobalVersion = true
+}
+
 project.version = scmVersion.version
 
 //project.ext.versions = [
