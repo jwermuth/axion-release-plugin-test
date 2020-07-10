@@ -1,13 +1,24 @@
 buildscript {
     repositories {
+        // TEST PLUGIN INSTRUCTION:
+        // Copy the plugin jar from axion-release-plugin into libs,
+        //   so it will be on the classpath
         flatDir dirs: "libs"
     }
     dependencies {
-        // axion-release-plugin-1.12.1-feature-useGlobalVersion-SNAPSHOT.jar
+        // TEST PLUGIN INSTRUCTION:
+        // Copy the specific version
         classpath "pl.allegro.tech.build:axion-release-plugin:1.12.1-feature-useGlobalVersion-SNAPSHOT"
-        //classpath "axion-release-plugin:1.12.1-feature-useGlobalVersion-SNAPSHOT"
 
-
+        // TEST PLUGIN INSTRUCTION:
+        // When using flatDir (see above), transient dependencies are not resolved, so you need to pick them
+        //   from axion-release-plugin manually.
+        //   The actual versions are fetched from the structure below, which resides in axion-release-plugin
+        //   project.ext.versions = [
+        //           jgit: '5.7.0.202003110725-r',
+        //           jsch: '0.1.54',
+        //           jschAgent: '0.0.9'
+        //   ]
         classpath group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '5.7.0.202003110725-r'
         classpath group: 'org.eclipse.jgit', name: 'org.eclipse.jgit.ui', version: '5.7.0.202003110725-r'
         classpath group: 'com.jcraft', name: 'jsch', version: '0.1.54'
@@ -18,7 +29,6 @@ buildscript {
         classpath group: 'com.jcraft', name: 'jsch.agentproxy.usocket-jna', version: '0.0.9'
         classpath group: 'com.jcraft', name: 'jsch.agentproxy.usocket-nc', version: '0.0.9'
         classpath group: 'com.github.zafarkhaja', name: 'java-semver', version: '0.9.0'
-
     }
 }
 /*
@@ -38,27 +48,20 @@ plugins {
 
     // Apply the groovy plugin to also add support for Groovy (needed for Spock)
     id 'groovy'
-//}
-    //id "pl.allegro.tech.build.axion-release"
-//         id "pl.allegro.tech.build.axion-release" version "1.10.2"
 }
 
 apply plugin: "pl.allegro.tech.build.axion-release"
+
+// TEST PLUGIN INSTRUCTION:
+// Configure the plugin the way you want to
 scmVersion {
     versionCreator 'simple'
-    // Allow tagging on multiple branches, with the same prefix, without tag-clashing, by using highest version independent of branches
-    // https://axion-release-plugin.readthedocs.io/en/latest/configuration/version/
-    useGlobalVersion = true
+    useHighestVersion = true
 }
-
 project.version = scmVersion.version
 
-//project.ext.versions = [
-//        jgit: '5.7.0.202003110725-r',
-//        jsch: '0.1.54',
-//        jschAgent: '0.0.9'
-//]
 
+// The parts below are just boilerplate for a java project.
 repositories {
     // Use jcenter for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
@@ -75,37 +78,7 @@ dependencies {
     // Use the awesome Spock testing and specification framework even with Java
     testImplementation 'org.spockframework:spock-core:1.2-groovy-2.5'
     testImplementation 'junit:junit:4.12'
-
-
-
-//    compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '5.7.0.202003110725-r'
-//    compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit.ui', version: '5.7.0.202003110725-r'
-//
-//    compile group: 'com.jcraft', name: 'jsch', version: '0.1.54'
-//    compile group: 'com.jcraft', name: 'jsch.agentproxy.core', version: '0.0.9'
-//    compile group: 'com.jcraft', name: 'jsch.agentproxy.jsch', version: '0.0.9'
-//    compile group: 'com.jcraft', name: 'jsch.agentproxy.sshagent', version: '0.0.9'
-//    compile group: 'com.jcraft', name: 'jsch.agentproxy.pageant', version: '0.0.9'
-//    compile group: 'com.jcraft', name: 'jsch.agentproxy.usocket-jna', version: '0.0.9'
-//    compile group: 'com.jcraft', name: 'jsch.agentproxy.usocket-nc', version: '0.0.9'
-//
-//    compile group: 'com.github.zafarkhaja', name: 'java-semver', version: '0.9.0'
-//
-//    testCompile (group: 'org.ajoberstar.grgit', name: 'grgit-core', version: '4.0.1') {
-//        exclude group: 'org.eclipse.jgit', module: 'org.eclipse.jgit.ui'
-//        exclude group: 'org.eclipse.jgit', module: 'org.eclipse.jgit'
-//    }
-//
-//    testCompile(group: 'org.spockframework', name: 'spock-core', version: '1.0-groovy-2.4') {
-//        exclude group: 'org.codehaus.groovy', module: 'groovy-all'
-//    }
-//    testCompile group: 'cglib', name: 'cglib-nodep', version: '3.1'
-//    testCompile group: 'org.objenesis', name: 'objenesis', version: '2.4'
-//    testCompile group: 'org.apache.sshd', name: 'sshd-core', version: '1.6.0'
-//    testCompile group: 'org.apache.sshd', name: 'sshd-git', version: '1.6.0'
-
 }
-
 
 // Define the main class for the application
 mainClassName = 'axion.release.plugin.test.App'
