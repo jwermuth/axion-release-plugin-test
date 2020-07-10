@@ -1,7 +1,7 @@
 # Whats this for
 
 This repository can help you perform manual testing of 
-`axion-release-plugin`.
+`axion-release-plugin` (its [here](https://github.com/allegro/axion-release-plugin) on github)
 
 ## How do I use it
 
